@@ -18,6 +18,9 @@ import com.sun.javadoc.SeeTag;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.ThrowsTag;
 import com.sun.javadoc.Type;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 /**
  * Doclet implementation for javadoc command.
@@ -237,6 +240,15 @@ public class JsonDoclet
 
         g.writeObjectField("name", doc.name());
         g.writeObjectField("comment_text", doc.commentText());
+
+        for(int i = 0; i < doc.tags().length; ++i) //custom tags
+        {
+            Tag t = doc.tags()[i];
+            if (isCustomTagKind(t.kind())) {
+                g.writeObjectField(t.name(), t.text());
+            }
+        }
+
         g.writeObjectField("return_type", doc.returnType().qualifiedTypeName());
         {
             g.writeArrayFieldStart("parameters");
@@ -301,5 +313,13 @@ public class JsonDoclet
             }
         }
         return null;
+    }
+
+    static boolean isCustomTagKind(String tagKind) {
+        Set<String> standardTags = new HashSet<String>(Arrays.asList("@throws",
+                                                                     "@see",
+                                                                     "@serial",
+                                                                     "@param"));
+        return !standardTags.contains(tagKind);
     }
 }
