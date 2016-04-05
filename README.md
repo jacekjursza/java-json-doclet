@@ -1,6 +1,7 @@
 JSON Doclet
 ====================================================================================================
 This is the doclet implementation for javadoc command.
+I forked this repo in order to add custom tag handling.
 
 Requires:
 
